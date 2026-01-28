@@ -1,0 +1,6 @@
+flask
+flask-login
+psycopg2-binary
+pandas
+openpyxl
+reportlab

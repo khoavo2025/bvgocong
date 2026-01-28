@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}Báo cáo điều dưỡng{% endblock %}
+
+{% block content %}
+<div class="d-flex gap-2 mb-3">
+    <select id="monthSelect" class="form-select" style="width:150px;">
+        {% for m in range(1,13) %}
+        <option value="{{ m }}">Tháng {{ m }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="yearSelect" class="form-select" style="width:120px;">
+        {% for y in range(2026, 2035) %}
+        <option value="{{ y }}">{{ y }}</option>
+        {% endfor %}
+    </select>
+</div>
+<!-- THANH ĐIỀU HƯỚNG -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <!-- TRỞ LẠI DASHBOARD KHOA -->
+    <a href="/dashboard/khoa/{{ session.dept }}"
+       class="btn btn-outline-secondary btn-sm">
+        ⬅ Trở lại khoa {{ session.dept }}
+    </a>
+
+    
+</div>
+
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body text-center">
+        <h4 class="fw-bold mb-1">
+            THEO DÕI TỶ LỆ NGƯỜI BỆNH / ĐIỀU DƯỠNG MỖI NGÀY
+        </h4>
+        <div class="text-muted" id="reportMonthYear">
+            Tháng {{ month }}/{{ year }}
+        </div>
+    </div>
+</div>
+
+
+<div class="table-responsive">
+<table class="table table-bordered text-center align-middle" style="font-size:13px;">
+    <thead class="table-primary">
+        <tr>
+            <th rowspan="2" class="sticky-col sticky-col-1" style="min-width:60px;">STT</th>
+            <th rowspan="2" class="sticky-col sticky-col-2" style="min-width:120px;">Khoa</th>
+            <th rowspan="2" class="sticky-col sticky-col-3" style="min-width:150px;">Nội dung</th>
+            <th colspan="31">Ngày trong tháng</th>
+        </tr>
+        <tr >
+            {% for d in range(1,32) %}
+            <th class="day-col">{{ d }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <form method="post">
+    <tbody>
+    {% for khoa in data %}
+        
+        <tr class="table-light fw-bold">
+            <td rowspan="4" class="sticky-col sticky-col-1">{{ loop.index }}</td>
+            <td rowspan="4" class="sticky-col sticky-col-2">{{ khoa.name }}</td>
+            <td class="sticky-col sticky-col-3 text-start">Người bệnh</td>
+            {% for d in range(1,32) %}
+            <td>
+                <input type="number"
+                       class="form-control compact autosave"
+                       data-day="{{ d }}"
+                       data-scope="dept"
+                       data-khoa="{{ khoa.code }}"
+                       data-type="patient"
+                       oninput="calcDay({{ d }})">
+
+            </td>
+            {% endfor %}
+        </tr>
+    
+        <tr>
+            <td class="sticky-col sticky-col-3 text-start">Điều dưỡng</td>
+            {% for d in range(1,32) %}
+            <td>
+                <input type="number"
+                        class="form-control compact autosave"
+                       data-day="{{ d }}"
+                       data-scope="dept"
+                       data-khoa="{{ khoa.code }}"
+                       data-type="nurse"
+                       oninput="calcDay({{ d }})">
+
+
+            </td>
+            {% endfor %}
+        </tr>
+    
+        <tr>
+            <td class="sticky-col sticky-col-3 text-start">Nghỉ bù / nghỉ phép</td>
+            {% for d in range(1,32) %}
+            <td>
+                <input type="number"
+                       class="form-control compact autosave"
+                       data-day="{{ d }}"
+                       data-scope="dept"
+                       data-khoa="{{ khoa.code }}"
+                       data-type="leave"
+                       oninput="calcDay({{ d }})">
+
+
+
+            </td>
+            {% endfor %}
+        </tr>
+    
+        <tr class="table-warning">
+            <td class="sticky-col sticky-col-3 text-start fw-bold">Tỷ lệ ĐD / BN</td>
+            {% for d in range(1,32) %}
+            <td>
+                <input type="text"
+                       class="form-control compact autosave"
+                       data-day="{{ d }}"
+                       data-scope="dept"
+                       data-khoa="{{ khoa.code }}"
+                       data-type="ratio"
+                       readonly>
+
+
+
+            </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+<!-- ===== TOÀN BỆNH VIỆN ===== -->
+<tr class="table-secondary fw-bold">
+    <td rowspan="4" class="sticky-col sticky-col-1">—</td>
+    <td rowspan="4" class="sticky-col sticky-col-2">TOÀN BỆNH VIỆN</td>
+    <td class="sticky-col sticky-col-3 text-start">Người bệnh</td>
+    {% for d in range(1,32) %}
+    <td>
+        <input type="number"
+               class="form-control compact form-control-total"
+               data-day="{{ d }}"
+               data-scope="hospital"
+               data-type="patient-all"
+               readonly>
+    </td>
+    {% endfor %}
+</tr>
+
+<tr class="table-secondary fw-bold">
+    <td class="sticky-col sticky-col-3 text-start">Điều dưỡng</td>
+    {% for d in range(1,32) %}
+    <td>
+        <input type="number"
+               class="form-control compact form-control-total"
+               data-day="{{ d }}"
+               data-scope="hospital"
+               data-type="nurse-all"
+               readonly>
+    </td>
+    {% endfor %}
+</tr>
+
+<tr class="table-secondary fw-bold">
+    <td class="sticky-col sticky-col-3 text-start">Nghỉ bù / nghỉ phép</td>
+    {% for d in range(1,32) %}
+    <td>
+        <input type="number"
+               class="form-control compact form-control-total"
+               data-day="{{ d }}"
+               data-scope="hospital"
+               data-type="leave-all"
+               readonly>
+    </td>
+    {% endfor %}
+</tr>
+
+<tr class="table-warning fw-bold">
+    <td class="sticky-col sticky-col-3 text-start">Tỷ lệ ĐD / BN</td>
+    {% for d in range(1,32) %}
+    <td>
+        <input type="text"
+               class="form-control compact form-control-ratio"
+               data-day="{{ d }}"
+               data-scope="hospital"
+               data-type="ratio-all"
+               readonly>
+    </td>
+    {% endfor %}
+</tr>
+
+
+
+
+    </tbody>
+    </table>
+    
+    
+    </form>
+
+</table>
+
+</div>
+<div class="text-end mt-3">
+        <button class="btn btn-primary px-4">
+            💾 Lưu báo cáo
+        </button>
+</div>
+
+<script src="{{ url_for('static', filename='js/nurse-report.js') }}"></script>
+{% endblock %}

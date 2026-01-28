@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>🧰 Vật tư – Thiết bị</h4>
+
+<form method="post" class="card card-body shadow-sm mb-4">
+
+    <div class="row g-3">
+
+        <div class="col-md-3">
+            <label class="form-label">Mã thiết bị</label>
+            <input name="eid" class="form-control" required>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Tên thiết bị</label>
+            <input name="name" class="form-control" required>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Số lượng</label>
+            <input name="qty" type="number" class="form-control" required>
+        </div>
+
+        <!-- ADMIN: CHỌN KHOA -->
+        {% if current_user.role == 'admin' %}
+        <div class="col-md-3">
+            <label class="form-label">Khoa</label>
+            <select name="dept" class="form-select" required>
+                {% for d in depts %}
+                <option value="{{ d[0] }}">{{ d[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% else %}
+        <!-- USER: ẨN KHOA -->
+        <input type="hidden" name="dept" value="{{ current_user.dept }}">
+        {% endif %}
+
+    </div>
+
+    <div class="mt-3">
+        <button class="btn btn-primary">➕ Thêm thiết bị</button>
+    </div>
+
+</form>
+
+
+<div class="table-responsive">
+<table class="table table-hover bg-white">
+<tr><th>Mã</th><th>Tên</th><th>SL</th><th>Khoa</th></tr>
+{% for e in data %}
+<tr class="{% if e[2] < 5 %}table-danger{% endif %}">
+<td>{{ e[0] }}</td><td>{{ e[1] }}</td><td>{{ e[2] }}</td><td>{{ e[3] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}

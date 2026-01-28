@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.edit-form {
+    max-width: 420px;
+    margin: auto;
+}
+
+.edit-input {
+    height: 46px;
+    border-radius: 12px;
+    font-size: 15px;
+}
+
+.form-label {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 576px) {
+    .edit-input,
+    .edit-form button {
+        height: 52px;
+        font-size: 16px;
+    }
+}
+
+/* ==============================
+   ADMIN USER EDIT – RESPONSIVE
+   ============================== */
+
+.edit-form-container {
+    max-width: 520px;
+    margin: auto;
+}
+
+.edit-card {
+    border-radius: 16px;
+}
+
+.edit-input {
+    height: 44px;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.edit-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255,193,7,.25);
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .edit-form-container {
+        max-width: 100%;
+        padding: 0 12px;
+    }
+
+    .edit-input {
+        height: 52px;
+        font-size: 17px;
+        padding: 12px 14px;
+        border-radius: 12px;
+    }
+
+    button.btn {
+        height: 52px;
+        font-size: 16px;
+        border-radius: 12px;
+    }
+}
+</style>
+
+<div class="container mt-4 edit-form-container">
+
+    <h4 class="mb-3 text-center">✏️ Chỉnh sửa user</h4>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} text-center">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="card shadow edit-card">
+        <div class="card-body p-4">
+
+            <form method="post" autocomplete="off" class="edit-form">
+
+                <!-- USERNAME -->
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                        <input name="username"
+                               class="form-control edit-input mb-3"
+                               value="{{ user[1] }}"
+                               required>
+
+                </div>
+            
+                <!-- EMAIL -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input name="email"
+                           type="email"
+                           class="form-control edit-input"
+                           value="{{ user[2] }}"
+                           required>
+                </div>
+            
+                <!-- KHOA -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Khoa / Phòng</label>
+                    <select name="dept" class="form-select edit-input">
+                        {% for d in [
+                          'HSCC','SAN','NHI','NTM','GMHS','KHTH','CNTT','KB','DD',
+                          'KT','TCHC','NG','NTH','VTYT','DUOC','XN','CDHA',
+                          'KSNK','DDUONG','VLTL','NHIEM'
+                        ] %}
+                        <option value="{{ d }}" {% if user[4] == d %}selected{% endif %}>
+                            {{ d }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+                <!-- ROLE -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Quyền</label>
+                    <select name="role" class="form-select edit-input">
+                        <option value="user" {% if user[3] == "user" %}selected{% endif %}>User</option>
+                        <option value="admin" {% if user[3] == "admin" %}selected{% endif %}>Admin</option>
+                    </select>
+                </div>
+            
+                <button class="btn btn-warning w-100">
+                    💾 Lưu thay đổi
+                </button>
+            
+            </form>
+
+
+
+            <a href="/admin/users"
+               class="btn btn-outline-secondary w-100 mt-3">
+                ⬅ Quay lại danh sách
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

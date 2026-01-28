@@ -1,0 +1,209 @@
+/* ===============================
+   FORM CONTROL – NURSE REPORT
+   =============================== */
+
+.form-control {
+    display: inline-block;
+    width: 50%;
+    height: 26px;
+    padding: 2px 6px;
+    font-size: 13px;
+    line-height: 1.4;
+
+    color: #212529;
+    background-color: #ffffff;
+    background-clip: padding-box;
+
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Focus */
+.form-control:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(13,110,253,.25);
+}
+
+/* Disabled / readonly */
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #f1f3f5;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+/* Kích thước nhỏ – dùng cho số liệu */
+.form-control-sm {
+    height: 24px;
+    padding: 1px 4px;
+    font-size: 12px;
+}
+
+/* Input tỷ lệ */
+.form-control-ratio {
+    width: 65px;
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+/* Input số lượng */
+.form-control-number {
+    width: 55px;
+}
+
+/* Tổng toàn viện */
+.form-control-total {
+    width: 60px;
+    background-color: #eef1f4;
+    font-weight: bold;
+}
+
+/* Bỏ spin button */
+input[type="number"].form-control {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+input[type="number"].form-control::-webkit-inner-spin-button,
+input[type="number"].form-control::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ===============================
+   DAY COLUMN – RESPONSIVE
+   =============================== */
+
+/* ===============================
+   COMPACT DAY COLUMN & INPUT
+   =============================== */
+
+th.day-col {
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    padding: 2px;
+    font-size: 14px;
+    text-align: center;
+}
+
+td.day-col {
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+
+    height: 22px !important;
+    font-size: 10px;
+    padding: 0;
+}
+
+/* input số gọn */
+.form-control.compact {
+    padding: 1px 2px;
+    height: 22px;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+/* input tỷ lệ */
+.form-control.compact-ratio {
+    padding: 1px 2px;
+    height: 22px;
+    font-size: 11px;
+    text-align: center;
+    background: #f8f9fa;
+    border: none;
+}
+
+/* màn hình rất lớn */
+@media (min-width: 1600px) {
+    th.day-col { min-width: 30px; font-size: 12px; }
+    .form-control.compact { height: 24px; }
+}
+
+/* màn hình nhỏ */
+@media (max-width: 1200px) {
+    th.day-col { min-width: 22px; font-size: 10px; }
+    .form-control.compact { height: 20px; }
+}
+
+
+/* ===============================
+   STICKY HEADER (NGÀY)
+   =============================== */
+
+thead th {
+    position: sticky;
+    top: 0;
+    background: #cfe2ff;
+    z-index: 6;
+}
+
+/* ô header giao với cột cố định */
+thead th.sticky-col {
+    z-index: 12;
+}
+
+/* ===============================
+   STICKY FIRST 3 COLUMNS
+   =============================== */
+
+.table-responsive {
+    overflow: auto;
+    max-height: 80vh;
+}
+
+/* nền chung cho cột cố định */
+.sticky-col {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 2;
+}
+
+/* cột 1: STT */
+.sticky-col-1 {
+    left: 0;
+    min-width: 50px;
+    z-index: 5;
+}
+
+/* cột 2: Khoa */
+.sticky-col-2 {
+    left: 50px;
+    min-width: 130px;
+    z-index: 5;
+}
+
+/* cột 3: Nội dung */
+.sticky-col-3 {
+    left: 180px;
+    min-width: 140px;
+    z-index: 5;
+}
+
+/* header nổi cao hơn */
+thead th.sticky-col {
+    z-index: 10;
+    background: #cfe2ff;
+}
+
+/* ngăn viền bị đè */
+.sticky-col-3 {
+    box-shadow: 2px 0 5px rgba(0,0,0,0.08);
+}
+.autosave.saved {
+    background-color: #e8fff1;
+    transition: background-color 0.4s;
+}
+.locked-input {
+    background-color: #f1f3f5 !important;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+

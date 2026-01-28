@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ==============================
+   ADMIN USER FORM – RESPONSIVE
+   ============================== */
+
+.admin-form-container {
+    max-width: 520px;
+    margin: auto;
+}
+
+.admin-card {
+    border-radius: 16px;
+}
+
+.admin-input {
+    height: 44px;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+/* Focus đẹp */
+.admin-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+/* Mobile tối ưu thật sự */
+@media (max-width: 576px) {
+    .admin-form-container {
+        max-width: 100%;
+        padding: 0 12px;
+    }
+
+    .admin-card {
+        border-radius: 14px;
+    }
+
+    .admin-input {
+        height: 52px;
+        font-size: 17px; /* chống zoom iOS */
+        padding: 12px 14px;
+        border-radius: 12px;
+    }
+
+    button.btn {
+        height: 52px;
+        font-size: 16px;
+        border-radius: 12px;
+    }
+}
+</style>
+
+<div class="container mt-4 admin-form-container">
+
+    <h4 class="mb-3 text-center">👤 Quản lý người dùng</h4>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} text-center">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="card shadow admin-card">
+        <div class="card-body p-4">
+
+            <form method="post" autocomplete="off">
+
+              <h5 class="text-center mb-4">➕ Tạo user</h5>
+            
+              <input type="text"
+                     name="username"
+                     class="form-control admin-input mb-2"
+                     placeholder="Username"
+                     autocomplete="new-username"
+                     required>
+            
+              <input type="email"
+                     name="email"
+                     class="form-control admin-input mb-2"
+                     placeholder="Email"
+                     autocomplete="off"
+                     required>
+            
+              <input type="password"
+                     name="password"
+                     class="form-control admin-input mb-2"
+                     placeholder="Mật khẩu"
+                     autocomplete="new-password"
+                     required>
+            
+              <select name="dept" class="form-select admin-input mb-2">
+                <option value="" disabled selected>-- Chọn khoa --</option>
+                <option>HSCC</option>
+                <option>SAN</option>
+                <option>NHI</option>
+                <option>NTM</option>
+                <option>GMHS</option>
+                <option>KHTH</option>
+                <option>CNTT</option>
+                <option>KB</option>
+                <option>DD</option>
+                <option>KT</option>
+                <option>TCHC</option>
+                <option>NG</option>
+                <option>NTH</option>
+                <option>VTYT</option>
+                <option>DUOC</option>
+                <option>XN</option>
+                <option>CDHA</option>
+                <option>KSNK</option>
+                <option>DDUONG</option>
+                <option>VLTL</option>
+                <option>NHIEM</option>
+              </select>
+            
+              <select name="role" class="form-select admin-input mb-4">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            
+              <button class="btn btn-primary w-100">
+                💾 Lưu người dùng
+              </button>
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>🏥 Quản lý khoa phòng</h4>
+
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-3 col-12">
+    <input name="code" class="form-control" placeholder="Mã khoa">
+  </div>
+  <div class="col-md-6 col-12">
+    <input name="name" class="form-control" placeholder="Tên khoa">
+  </div>
+  <div class="col-md-3 col-12">
+    <button class="btn btn-success w-100">Thêm</button>
+  </div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-bordered table-sm bg-white">
+<tr><th>Mã</th><th>Tên khoa</th></tr>
+{% for d in data %}
+<tr>
+    <td>{{ d[0] }}</td>
+    <td>{{ d[1] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}

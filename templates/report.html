@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.dashboard {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 600px;
+}
+
+.center-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #0f4c75;
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    z-index: 10;
+}
+
+.center-box h3 {
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.center-box p {
+    font-size: 14px;
+    opacity: .9;
+    color: #fff;
+}
+
+.dept {
+    position: absolute;
+    width: 200px;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.dept:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0,0,0,.18);
+}
+
+.dept h6 {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.dept small {
+    color: #6b7280;
+}
+
+.dept .alert {
+    font-size: 12px;
+    padding: 4px 8px;
+    margin-top: 6px;
+}
+
+/* VỊ TRÍ KHOA */
+.dept.hscc      { top: 0%; left: 50%; transform: translate(-50%, 0); }
+.dept.san       { top: 15%; right: 10%; }
+.dept.nhi       { top: 50%; right: 0%; transform: translateY(-50%); }
+.dept.noitim    { bottom: 15%; right: 10%; }
+.dept.gmhs      { bottom: 0%; left: 50%; transform: translate(-50%, 0); }
+.dept.khth      { bottom: 15%; left: 10%; }
+.dept.dieuduong { top: 50%; left: 0%; transform: translateY(-50%); }
+.dept.cntt      { top: 15%; left: 10%; }
+.dept.ketoan    { top: 35%; left: 50%; transform: translateX(-50%); }
+.dept.tchc      { bottom: 35%; left: 50%; transform: translateX(-50%); }
+/* ===== BỔ SUNG KHOA – PHÂN BỐ THEO GÓC TRÒN ===== */
+
+/* Giữa HSCC (0°) và Sản (45°) */
+.dept.noitonghop { top: 8%; right: 25%; }
+
+/* Giữa Sản (45°) và Nhi (90°) */
+.dept.nhiem      { top: 28%; right: 22%; }
+
+/* Giữa Nhi (90°) và Nội tim mạch (135°) */
+.dept.duoc       { bottom: 28%; right: 22%; }
+
+/* Giữa Nội tim mạch (135°) và GMHS (180°) */
+.dept.xetnghiem  { bottom: 8%; right: 25%; }
+
+/* Giữa GMHS (180°) và KHTH (225°) */
+.dept.cdha       { bottom: 8%; left: 25%; }
+
+/* Giữa KHTH (225°) và Điều dưỡng (270°) */
+.dept.vattuyte   { bottom: 28%; left: 22%; }
+
+/* Giữa Điều dưỡng (270°) và CNTT (315°) */
+.dept.ksnk       { top: 28%; left: 22%; }
+
+/* Giữa CNTT (315°) và HSCC (360°) */
+.dept.dinhduong  { top: 8%; left: 25%; }
+
+/* Vòng trong – hỗ trợ chức năng */
+.dept.vatlytl    { top: 50%; left: 50%; transform: translate(-50%, -120%); }
+/* Khoa Ngoại – nằm trên Nội tổng hợp và Sản */
+.dept.ngoai {
+    top: 1%;
+    right: 5%;
+}
+
+
+
+
+/* =========================
+   RESPONSIVE – MOBILE FIRST
+   ========================= */
+
+/* Tablet & Mobile */
+@media (max-width: 992px) {
+
+    .dashboard {
+        position: static;
+        height: auto;
+        min-height: unset;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* BAN GIÁM ĐỐC */
+    .center-box {
+        position: static;
+        transform: none;
+        width: 100%;
+        border-radius: 14px;
+    }
+
+    /* KHOA */
+    .dept {
+        position: static;
+        width: 100%;
+        transform: none !important;
+    }
+}
+
+/* Mobile nhỏ */
+@media (max-width: 576px) {
+
+    .dept {
+        padding: 12px;
+    }
+
+    .dept h6 {
+        font-size: 15px;
+    }
+
+    .center-box h3 {
+        font-size: 18px;
+    }
+
+    .center-box p {
+        font-size: 13px;
+    }
+}
+.dept.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    filter: grayscale(70%);
+}
+
+</style>
+
+<h2 class="mb-4 text-center">📊 Dashboard Tổng Quan Bệnh Viện</h2>
+
+<div class="dashboard">
+
+    <!-- BAN GIÁM ĐỐC -->
+    <div class="center-box">
+        <h3>Ban Giám Đốc</h3>
+        <p>Điều hành & Giám sát toàn viện</p>
+        <hr class="border-light">
+        <div class="d-flex justify-content-between gap-3">
+            <div>
+                <strong>{{ report|length }}</strong><br>
+                <small>Khoa</small>
+            </div>
+            <div>
+                <strong>{{ low|length }}</strong><br>
+                <small>Cảnh báo</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- HSCC -->
+    <div class="dept hscc
+         {% if session.role != 'admin' and session.dept != 'HSCC' %}disabled{% endif %}"
+         {% if session.role == 'admin' or session.dept == 'HSCC' %}
+            onclick="openDept('HSCC')"
+         {% endif %}
+    >
+        <h6>🚑 HSCC</h6>
+        <small>Hồi sức cấp cứu</small>
+        <div class="alert alert-danger mt-2">Ưu tiên cao</div>
+    </div>
+
+
+    <!-- NHI -->
+    <div class="dept nhi
+        {% if session.role != 'admin' and session.dept != 'NHI' %}disabled{% endif %}"
+         {% if session.role == 'admin' or session.dept == 'NHI' %}
+            onclick="openDept('NHI')"
+         {% endif %}
+    >
+        <h6>🤰 NHI </h6>
+        <small>Chăm sóc trẻ em</small>
+    </div>
+
+    <!-- SẢN -->
+    <div class="dept san
+        {% if session.role != 'admin' and session.dept != 'SAN' %}disabled{% endif %}"
+         {% if session.role == 'admin' or session.dept == 'SAN' %}
+            onclick="openDept('SAN')"
+         {% endif %}
+    >
+        <h6>🤰 Sản</h6>
+        <small>Sản phụ khoa</small>
+    </div>
+    <div class="dept noitim
+     {% if session.role != 'admin' and session.dept != 'NTM' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'NTM' %}
+        onclick="openDept('NTM')"
+     {% endif %}
+    >
+    <h6>🫀 Nội tim mạch</h6>
+    <small>Chuyên khoa tim mạch</small>
+    </div>
+
+    <div class="dept gmhs
+     {% if session.role != 'admin' and session.dept != 'GMHS' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'GMHS' %}
+        onclick="openDept('GMHS')"
+     {% endif %}
+     >
+    <h6>💉 GMHS</h6>
+    <small>Gây mê hồi sức</small>
+    </div>
+
+    <div class="dept khth
+     {% if session.role != 'admin' and session.dept != 'KHTH' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'KHTH' %}
+        onclick="openDept('KHTH')"
+     {% endif %}
+    >
+    <h6>📋 Kế hoạch tổng hợp</h6>
+    <small>Điều phối & thống kê</small>
+    </div>
+
+    <div class="dept cntt
+     {% if session.role != 'admin' and session.dept != 'CNTT' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'CNTT' %}
+        onclick="openDept('CNTT')"
+     {% endif %}
+    >
+    <h6>🖥️ CNTT</h6>
+    <small>Công nghệ thông tin</small>
+    </div>
+
+    <div class="dept khambenh
+     {% if session.role != 'admin' and session.dept != 'KB' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'KB' %}
+        onclick="openDept('KB')"
+     {% endif %}
+    >
+    <h6>🩺 Khám bệnh</h6>
+    <small>Tiếp nhận & sàng lọc</small>
+    </div>
+
+    <div class="dept dieuduong
+     {% if session.role != 'admin' and session.dept != 'DD' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'DD' %}
+        onclick="openDept('DD')"
+     {% endif %}
+    >
+    <h6>👩‍⚕️ Điều dưỡng</h6>
+    <small>Quản lý điều dưỡng</small>
+    </div>
+
+    <div class="dept ketoan
+     {% if session.role != 'admin' and session.dept != 'KT' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'KT' %}
+        onclick="openDept('KT')"
+     {% endif %}
+    >
+    <h6>💰 Kế toán</h6>
+    <small>Tài chính – kế toán</small>
+    </div>
+
+    <div class="dept tchc
+     {% if session.role != 'admin' and session.dept != 'TCHC' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'TCHC' %}
+        onclick="openDept('TCHC')"
+     {% endif %}
+    >
+    <h6>🏛️ Tổ chức hành chánh</h6>
+    <small>Nhân sự & hành chính</small>
+    </div>
+
+
+    <!-- NGOẠI -->
+    <div class="dept ngoai
+     {% if session.role != 'admin' and session.dept != 'NG' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'NG' %}
+        onclick="openDept('NG')"
+     {% endif %}
+    >
+    <h6>🔪 Ngoại</h6>
+    <small>Phẫu thuật – can thiệp</small>
+    </div>
+
+
+    <!-- NỘI TỔNG HỢP -->
+    <div class="dept noitonghop
+     {% if session.role != 'admin' and session.dept != 'NTH' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'NTH' %}
+        onclick="openDept('NTH')"
+     {% endif %}
+    >
+    <h6>🫁 Nội tổng hợp</h6>
+    <small>Điều trị nội khoa</small>
+    </div>
+    <!-- VẬT TƯ THIẾT BỊ Y TẾ -->
+    <div class="dept vattuyte
+     {% if session.role != 'admin' and session.dept != 'VTYT' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'VTYT' %}
+        onclick="openDept('VTYT')"
+     {% endif %}
+    >
+    <h6>🧰 Vật tư – TBYT</h6>
+    <small>Trang thiết bị y tế</small>
+    </div>
+
+    <!-- DƯỢC -->
+    <div class="dept duoc
+     {% if session.role != 'admin' and session.dept != 'DUOC' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'DUOC' %}
+        onclick="openDept('DUOC')"
+     {% endif %}
+    >
+    <h6>💊 Dược</h6>
+    <small>Quản lý thuốc</small>
+    </div>
+
+    <!-- XÉT NGHIỆM -->
+    <div class="dept xetnghiem
+     {% if session.role != 'admin' and session.dept != 'XN' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'XN' %}
+        onclick="openDept('XN')"
+     {% endif %}
+    >
+    <h6>🧪 Xét nghiệm</h6>
+    <small>Cận lâm sàng</small>
+    </div>
+
+    <!-- CHẨN ĐOÁN HÌNH ẢNH -->
+    <div class="dept cdha
+     {% if session.role != 'admin' and session.dept != 'CDHA' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'CDHA' %}
+        onclick="openDept('CDHA')"
+     {% endif %}
+    >
+    <h6>🩻 CĐHA</h6>
+    <small>Chẩn đoán hình ảnh</small>
+    </div>
+
+    <!-- KIỂM SOÁT NHIỄM KHUẨN -->
+    <div class="dept ksnk
+     {% if session.role != 'admin' and session.dept != 'KSNK' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'KSNK' %}
+        onclick="openDept('KSNK')"
+     {% endif %}
+    >
+    <h6>🧼 KSNK</h6>
+    <small>Kiểm soát nhiễm khuẩn</small>
+    </div>
+    
+    <!-- DINH DƯỠNG -->
+    <div class="dept dinhduong
+     {% if session.role != 'admin' and session.dept != 'DDUONG' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'DDUONG' %}
+        onclick="openDept('DDUONG')"
+     {% endif %}
+    >
+    <h6>🥗 Dinh dưỡng</h6>
+    <small>Tiết chế</small>
+    </div>
+    
+    <!-- VẬT LÝ TRỊ LIỆU -->
+    <div class="dept vatlytl
+     {% if session.role != 'admin' and session.dept != 'VLTL' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'VLTL' %}
+        onclick="openDept('VLTL')"
+     {% endif %}
+    >
+    <h6>🧘‍♂️ VLTL</h6>
+    <small>Phục hồi chức năng</small>
+    </div>
+    <!-- NHIỄM -->
+    <div class="dept nhiem
+     {% if session.role != 'admin' and session.dept != 'NHIEM' %}disabled{% endif %}"
+     {% if session.role == 'admin' or session.dept == 'NHIEM' %}
+        onclick="openDept('NHIEM')"
+     {% endif %}
+    >
+    <h6>🦠 Nhiễm</h6>
+    <small>Bệnh truyền nhiễm</small>
+    <div class="alert alert-warning mt-2">Theo dõi</div>
+    </div>
+
+
+</div>
+<script>
+function openDept(code) {
+    window.location.href = `/dashboard/khoa/${code}`;
+}
+</script>
+
+{% endblock %}

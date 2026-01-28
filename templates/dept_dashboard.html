@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.khoa-box {
+    max-width: 520px;
+    margin: 60px auto;
+    background: white;
+    padding: 32px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    text-align: center;
+}
+
+.khoa-box h2 {
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.khoa-box p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.btn-report {
+    margin-top: 22px;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 14px;
+}
+
+.btn-back {
+    margin-top: 14px;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 12px;
+}
+</style>
+
+<div class="khoa-box">
+
+    <h2>🏥 Khoa {{ dept }}</h2>
+    <p>Bảng điều hành khoa phòng</p>
+
+    <hr>
+
+    {% if dept not in ["DUOC", "XN","CDHA", "KHTH", "VTYT", "KSNK", "CNTT", "DDUONG", "KB" ] %}
+    <!-- NÚT BÁO CÁO -->
+    <a href="/nurse-report" class="btn btn-primary w-100 btn-report">
+        🩺 Báo cáo điều dưỡng
+    </a>
+    {% endif %}
+
+
+    <!-- NÚT TRỞ LẠI -->
+    <a href="/report" class="btn btn-outline-secondary w-100 btn-back">
+        ⬅ Trở lại DASHBOARD
+    </a>
+
+</div>
+
+{% endblock %}

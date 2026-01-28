@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h3 class="mb-3">👥 Quản lý người dùng</h3>
+
+<a href="/admin/users/create" class="btn btn-primary mb-3">
+➕ Tạo user mới
+</a>
+<form method="get" class="row g-2 mb-3">
+
+    <!-- TÌM USERNAME -->
+    <div class="col-12 col-md-5">
+        <input type="text"
+               name="q"
+               value="{{ q }}"
+               class="form-control form-control-lg"
+               placeholder="🔍 Tìm theo tài khoản">
+    </div>
+
+    <!-- LỌC KHOA -->
+    <div class="col-12 col-md-4">
+        <select name="dept" class="form-select">
+            <option value="">🏥 Tất cả khoa</option>
+            <option value="HSCC" {% if dept=="HSCC" %}selected{% endif %}>HSCC</option>
+            <option value="SAN">Sản</option>
+            <option value="NHI">Nhi</option>
+            <option value="NHIEM">Nhiễm</option>
+            <option value="NG">Ngoại</option>
+            <option value="NTH">Nội Tổng hợp</option>
+            <option value="NTM">Nội Tim Mạch</option>
+            <option value="DUOC">Dược</option>
+            <option value="XN">Xét nghiệm</option>
+            <option value="CDHA">CĐHA</option>
+            <option value="CNTT">CNTT</option>
+            <option value="KHTH">KHTH</option>
+            <option value="DD">Điều dưỡng</option>
+            <option value="KT">Kế toán</option>
+            <option value="TCHC">TCHC</option>
+            <option value="GMHS">GMHS</option>
+            <option value="CDHA">CĐHA</option>
+            <option value="KHTH">KHTH</option>
+            <option value="VTYT">VTYT</option>
+            <option value="DDUONG">Dinh dưỡng</option>
+            <option value="KSNK">KSNK</option>
+            <option value="KB">Khám bệnh</option>
+            <!-- thêm khoa nếu cần -->
+        </select>
+    </div>
+
+    <!-- NÚT -->
+    <div class="col-12 col-md-3">
+        <button class="btn btn-primary w-100">
+            🔎 Tìm kiếm
+        </button>
+    </div>
+
+</form>
+
+<div class="table-responsive">
+<table class="table table-bordered table-hover align-middle">
+<thead class="table-dark">
+<tr>
+    <th>#</th>
+    <th>Tài khoản</th>
+    <th>Email</th>
+    <th>Khoa / Phòng</th>
+    <th>Quyền</th>
+    <th width="180">Thao tác</th>
+    <th>Trạng thái</th>
+
+</tr>
+</thead>
+
+<tbody>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} text-center">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% for u in users %}
+<tr class="{% if not u[5] %}table-secondary{% endif %}
+            {% if highlight and highlight|int == u[0] %}table-success{% endif %}
+    ">
+    <td>{{ u[0] }}</td>
+    <td>{{ u[1] }}</td>
+    <td>{{ u[2] }}</td>
+    <td>{{ u[4] }}</td>
+    <td>
+        <span class="badge bg-{{ 'danger' if u[3]=='admin' else 'secondary' }}">
+            {{ u[3] }}
+        </span>
+    </td>
+    <td>
+        {% if u[5] %}
+        <a href="/admin/users/edit/{{ u[0] }}"
+           class="btn btn-sm btn-warning">✏️</a>
+    
+        <a href="/admin/users/reset/{{ u[0] }}"
+           class="btn btn-sm btn-info">🔑</a>
+        {% endif %}
+
+
+       {% if u[3] != 'admin' %}
+        <button type="button"
+            class="btn btn-sm btn-danger"
+            onclick="confirmUserAction({{ u[0] }})">
+            ❌
+        </button>
+        {% endif %}
+
+    </td>
+    <td>
+    {% if u[5] %}
+        <span class="badge bg-success">Hoạt động</span>
+    {% else %}
+        <form method="post"
+              action="/admin/users/unlock/{{ u[0] }}"
+              style="display:inline"
+              onsubmit="return confirm('Mở khóa user này?')">
+            <button class="btn btn-sm btn-success">
+                🔓 Mở khóa
+            </button>
+        </form>
+    {% endif %}
+    </td>
+
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+</div>
+<script>
+function confirmUserAction(userId) {
+    if (confirm("Bạn muốn TẠM KHÓA user này?\n\nOK = Tạm khóa\nCancel = Xóa vĩnh viễn")) {
+
+        // 👉 TẠM KHÓA
+        fetch(`/admin/users/lock/${userId}`, {
+            method: "POST"
+        }).then(() => location.reload());
+
+    } else {
+
+        // 👉 XÓA VĨNH VIỄN
+        if (confirm("⚠️ XÓA VĨNH VIỄN USER?\nKhông thể khôi phục!")) {
+            fetch(`/admin/users/delete/${userId}`, {
+                method: "POST"
+            }).then(() => location.reload());
+        }
+    }
+}
+</script>
+
+{% endblock %}

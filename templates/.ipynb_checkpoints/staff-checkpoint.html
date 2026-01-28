@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>👨‍⚕️ Nhân sự</h4>
+
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-3 col-12">
+    <input name="sid" class="form-control" placeholder="Mã NS">
+  </div>
+  <div class="col-md-3 col-12">
+    <input name="name" class="form-control" placeholder="Họ tên">
+  </div>
+  <div class="col-md-3 col-12">
+    <input name="role" class="form-control" placeholder="Chức danh">
+  </div>
+  <div class="col-md-2 col-12">
+    <select name="dept" class="form-select">
+      {% for d in depts %}
+      <option value="{{ d[0] }}">{{ d[1] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-1 col-12">
+    <button class="btn btn-success w-100">+</button>
+  </div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-striped bg-white">
+<tr><th>Mã</th><th>Tên</th><th>Chức danh</th><th>Khoa</th></tr>
+{% for s in data %}
+<tr>
+<td>{{ s[0] }}</td><td>{{ s[1] }}</td><td>{{ s[2] }}</td><td>{{ s[3] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}
