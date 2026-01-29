@@ -607,5 +607,4 @@ def report():
 
 
 # KHÔNG cần app.run() khi deploy
-
-app.run(debug=True)
+# app.run(debug=True)
