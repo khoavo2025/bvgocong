@@ -33,8 +33,10 @@ def db():
         host="dpg-d65aoh8gjchc73bf45i0-a.oregon-postgres.render.com",
         database="hospital_xevo",
         user="hospital_user",
-        password="QGCAZHYlrSzWEElpmGNMQuQWKbC1rXmc"  # đổi cho đúng
+        password="QGCAZHYlrSzWEElpmGNMQuQWKbC1rXmc",
+        sslmode="require"
     )
+
 
 # ===== LOGIN =====
 login_manager = LoginManager(app)
