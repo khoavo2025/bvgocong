@@ -30,10 +30,10 @@ DEPARTMENTS = [
 # ===== DATABASE =====
 def db():
     return psycopg2.connect(
-        host="bvgocong.onrender.com",
-        database="hospital",
+        host="dpg-d65aoh8gjchc73bf45i0-a",
+        database="hospital_xevo",
         user="hospital_user",
-        password="123456"  # đổi cho đúng
+        password="QGCAZHYlrSzWEElpmGNMQuQWKbC1rXmc"  # đổi cho đúng
     )
 
 # ===== LOGIN =====
