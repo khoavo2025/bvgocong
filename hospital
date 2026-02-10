@@ -1,0 +1,266 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict 0FGNSgN2KQTpk9KBXyhhV93uYIPglmyuA26CHMycL7MBQ5KMbv5txGCzjIkcJNd
+
+-- Dumped from database version 18.1
+-- Dumped by pg_dump version 18.1
+
+-- Started on 2026-01-29 15:41:41
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 219 (class 1259 OID 16716)
+-- Name: departments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.departments (
+    code text NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.departments OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16739)
+-- Name: equipment; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipment (
+    eid text NOT NULL,
+    name text NOT NULL,
+    qty integer NOT NULL,
+    dept text
+);
+
+
+ALTER TABLE public.equipment OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16725)
+-- Name: staff; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.staff (
+    sid text NOT NULL,
+    name text NOT NULL,
+    role text,
+    dept text
+);
+
+
+ALTER TABLE public.staff OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16755)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username text,
+    password text,
+    role text,
+    dept text,
+    email character varying(255),
+    is_active boolean DEFAULT true,
+    CONSTRAINT users_role_check CHECK ((role = ANY (ARRAY['admin'::text, 'user'::text])))
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16754)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5040 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- TOC entry 4868 (class 2604 OID 16758)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 5030 (class 0 OID 16716)
+-- Dependencies: 219
+-- Data for Name: departments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.departments (code, name) FROM stdin;
+CNTT	Công nghệ thông tin
+\.
+
+
+--
+-- TOC entry 5032 (class 0 OID 16739)
+-- Dependencies: 221
+-- Data for Name: equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.equipment (eid, name, qty, dept) FROM stdin;
+canon 2900	Mực Canon 26a	2	CNTT
+Hp 	Mực in hp 	10	CNTT
+\.
+
+
+--
+-- TOC entry 5031 (class 0 OID 16725)
+-- Dependencies: 220
+-- Data for Name: staff; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.staff (sid, name, role, dept) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5034 (class 0 OID 16755)
+-- Dependencies: 223
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, username, password, role, dept, email, is_active) FROM stdin;
+1	admin	123456	admin	ALL	admin@gmail.com	t
+11	dd01	123456	user	DD	dd01@gmail.com	t
+12	dd02	123456789	user	DD	dd02@gmail.com	t
+13	nth01	123456	user	NTH	nth01@gmail.com	t
+14	ng01	123456	user	NG	ng01@gmail.com	t
+15	nhiem01	123456	user	NHIEM	nhiem01@gmail.com	t
+16	nhi01	123456	user	NHI	nhi01@gmail.com	t
+17	duoc01	123456	user	DUOC	duoc01@gmail.com	t
+18	ntm01	123456	user	NTM	ntm01@gmail.com	t
+19	xn01	123456	user	XN	xn01@gmail.com	t
+20	gmhs01	123456	user	GMHS	gmhs01@gmail.com	t
+22	khth01	123456	user	KHTH	khth01@gmail.com	t
+23	vtyt01	123456	user	VTYT	vtyt01@gmail.com	t
+24	ksnk01	123456	user	KSNK	ksnk01@gmail.com	t
+7	hscc01	123456	user	HSCC	hscc01@gmail.com	t
+6	cntt01	123456	user	CNTT	cntt01@gmail.com	t
+21	cdha01	123456	user	CDHA	cdha01@gmail.com	t
+25	dduong01	123456	user	DDUONG	dduong01@gmail.com	t
+8	san01	123456	user	SAN	san01@gmail.com	t
+27	kt01	123456	user	KT	kt01@gmail.com	t
+26	kb	123456	user	KB	kb01@gmail.com	t
+\.
+
+
+--
+-- TOC entry 5041 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 27, true);
+
+
+--
+-- TOC entry 4872 (class 2606 OID 16724)
+-- Name: departments departments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.departments
+    ADD CONSTRAINT departments_pkey PRIMARY KEY (code);
+
+
+--
+-- TOC entry 4876 (class 2606 OID 16748)
+-- Name: equipment equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment
+    ADD CONSTRAINT equipment_pkey PRIMARY KEY (eid);
+
+
+--
+-- TOC entry 4874 (class 2606 OID 16733)
+-- Name: staff staff_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff
+    ADD CONSTRAINT staff_pkey PRIMARY KEY (sid);
+
+
+--
+-- TOC entry 4878 (class 2606 OID 16764)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4880 (class 2606 OID 16766)
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 4882 (class 2606 OID 16749)
+-- Name: equipment equipment_dept_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment
+    ADD CONSTRAINT equipment_dept_fkey FOREIGN KEY (dept) REFERENCES public.departments(code);
+
+
+--
+-- TOC entry 4881 (class 2606 OID 16734)
+-- Name: staff staff_dept_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff
+    ADD CONSTRAINT staff_dept_fkey FOREIGN KEY (dept) REFERENCES public.departments(code);
+
+
+-- Completed on 2026-01-29 15:41:41
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict 0FGNSgN2KQTpk9KBXyhhV93uYIPglmyuA26CHMycL7MBQ5KMbv5txGCzjIkcJNd
+
