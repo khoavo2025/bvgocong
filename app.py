@@ -30,9 +30,9 @@ DEPARTMENTS = [
 # ===== DATABASE =====
 def db():
     return psycopg2.connect(
-        host="localhost",
+        host="bvgocong.onrender.com",
         database="hospital",
-        user="postgres",
+        user="hospital_user",
         password="123456"  # đổi cho đúng
     )
 
